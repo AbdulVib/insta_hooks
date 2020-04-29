@@ -20,6 +20,6 @@ const schema =  mongoose.Schema({
   
 })
 
-const User = mongoose.model('insta_one', schema)
+const User = mongoose.model('insta_users', schema)
 
 module.exports = User

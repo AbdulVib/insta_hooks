@@ -6,8 +6,16 @@ const jwt = require('jsonwebtoken')
 const keys = require('../config/keys')
 const jwt_decode = require('jwt-decode')
 
+
+const requireLogin = require('../middleware/requireLogin')
+
 //get models
-const User = require('../modals/schema')
+const User = require('../modals/userSschema')
+
+//get Login data
+// router.get('/protected', requireLogin, (req, res) => {
+//   res.send('hello user')
+// })
 
 //get
 router.get('/', (req, res) => {
@@ -83,17 +91,21 @@ router.post('/signin', (req, res) => {
     //check password using bcrypt
     bcrypt.compare(password, user.password).then(isMatch => {
       if(isMatch){
-        //generate token using jwt
-        const payload = { user }
-        jwt.sign(payload, keys.secretKey, {expiresIn: 3600}, (err, token) => {
-          //get user from token
-          const decode = jwt_decode(token)
-          res.json({
-            success: true,
-            token: 'Bearer ' + token,
-            decode: decode
-          })
-        })
+        // //generate token using jwt
+        // const payload = { user }
+        // jwt.sign(payload, keys.secretKey, {expiresIn: 3600}, (err, token) => {
+        //   //get user from token
+        //   const decode = jwt_decode(token)
+        //   res.json({
+        //     success: true,
+        //     token: 'Bearer ' + token,
+        //     decode: decode
+        //   })
+        // })
+
+        const token = jwt.sign({ _id: user._id }, keys.secretKey)
+        res.json(token)
+
       }else{
         return res.status(400).json({
           status: 'error',
